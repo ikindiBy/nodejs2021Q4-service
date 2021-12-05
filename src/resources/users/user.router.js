@@ -1,11 +1,33 @@
-const router = require('express').Router();
 const User = require('./user.model');
 const usersService = require('./user.service');
 
-router.route('/').get(async (req, res) => {
-  const users = await usersService.getAll();
-  // map user fields to exclude secret fields like "password"
-  res.json(users.map(User.toResponse));
-});
+async function routes (fastify) {
+  fastify.get('/users', async () => {
+    const users = await usersService.getAll();
+    if (!users) {
+      throw new Error('No users found')
+    }
+    return users.map(userItem => User.toResponse(userItem));
+  })
 
-module.exports = router;
+  const userBodyJsonSchema = {
+    type: 'object',
+    required: ['name'],
+    properties: {
+      name: { type: 'string' },
+      login: { type: 'string' },
+      password: { type: 'string' },
+    },
+  };
+
+  const schema = {
+    body: userBodyJsonSchema,
+  }
+
+  fastify.post('/users', { schema }, async (request) => {
+    const result = await usersService.insertOne(request.body)
+    return User.toResponse(result);
+  })
+}
+
+module.exports = routes
