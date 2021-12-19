@@ -1,6 +1,8 @@
-const fastify = require('./app');
+import application from './app';
+
 
 const { PORT } = require('./common/config');
+const fastify = application();
 
 const start = async () => {
   try {
