@@ -33,8 +33,8 @@ export const deleteById = async (id: string) => {
  * @param data {object} type of Board
  * @returns status of updating
  */
-export const updateOne = async (id: string, data: IBoardAPI) => {
-  const index = await boardsRepo.getIndexById(id);
+export const updateOne = (id: string, data: IBoardAPI) => {
+  const index = boardsRepo.getIndexById(id);
   if (index >= 0) {
     return boardsRepo.updateOne(id, index, data);
   }

@@ -3,8 +3,11 @@ import { IUser } from '../../interfaces';
 
 class User implements IUser {
   name: string;
+
   login: string;
+
   password: string;
+
   id: string;
 
   constructor({

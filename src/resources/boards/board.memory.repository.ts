@@ -16,7 +16,7 @@ export const getById = async (id: string): Promise<IBoard | null> => {
 
 export const checkExistingById = async (id: string): Promise<boolean> => await db.findIndex(boardItem => boardItem.id === id) >= 0;
 
-export const getIndexById = async (id: string): Promise<number> => await db.findIndex(boardItem => boardItem.id === id);
+export const getIndexById = (id: string): number => db.findIndex(boardItem => boardItem.id === id);
  
 export const deleteByIndex = async (index: number): Promise<boolean> => {
   await db.splice(index, 1);

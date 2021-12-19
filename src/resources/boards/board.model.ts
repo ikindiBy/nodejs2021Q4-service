@@ -3,7 +3,9 @@ import { IBoard, IColumn } from '../../interfaces';
 
 class Board implements IBoard {
   title: string;
+
   columns: IColumn[];
+
   id: string;
 
   constructor({
