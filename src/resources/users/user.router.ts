@@ -1,13 +1,15 @@
-const User = require('./user.model');
-const usersService = require('./user.service');
+// import { FastifyInstance } from 'fastify';
+import { usersService } from './user.service';
 
-async function routes (fastify) {
+
+//  const userRoutes = async (fastify: FastifyInstance) => {
+const userRoutes = async (fastify) => {
   fastify.get('/users', async () => {
     const users = await usersService.getAll();
     if (!users) {
       throw new Error('No users found')
     }
-    return users.map(userItem => User.toResponse(userItem));
+    return users;
   });
 
   fastify.get('/users/:userId', async (request, reply) => {
@@ -15,7 +17,7 @@ async function routes (fastify) {
     if (userId) {
       const user = await usersService.getById(userId);
 
-      return reply.status(200).send(User.toResponse(user));
+      return reply.status(200).send(user);
     }
   
     return null;
@@ -53,14 +55,14 @@ async function routes (fastify) {
 
   fastify.post('/users', { schema }, async (request, reply) => {
     const result = await usersService.insertOne(request.body);
-    return reply.status(201).send(User.toResponse(result));
+    return reply.status(201).send(result);
   });
 
   fastify.put('/users/:userId', { schema }, async (request, reply) => {
     const userId = request?.params?.userId;
     const result = await usersService.updateOne(userId, request.body);
-    return reply.status(200).send(User.toResponse(result));
+    return reply.status(200).send(result);
   });
 }
 
-module.exports = routes
+export default userRoutes;

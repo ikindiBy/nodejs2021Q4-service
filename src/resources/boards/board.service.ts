@@ -1,6 +1,5 @@
 import { boardsRepo } from './board.memory.repository';
-
-import { IBoardAPI } from '../../interfaces';
+import { IBoardAPI, IBoard } from '../../interfaces';
 
 /**
  * Returns all boards from DB
@@ -21,7 +20,7 @@ export const getById = (id: string) => boardsRepo.getById(id);
  * @returns status of removing
  */
 export const deleteById = async (id: string) => {
-  const index = boardsRepo.getIndexById(id);
+  const index = await boardsRepo.getIndexById(id);
   if (index >= 0) {
     return boardsRepo.deleteByIndex(index);
   }
@@ -34,8 +33,8 @@ export const deleteById = async (id: string) => {
  * @param data {object} type of Board
  * @returns status of updating
  */
-export const updateOne = (id: string, data: IBoardAPI) => {
-  const index = boardsRepo.getIndexById(id);
+export const updateOne = async (id: string, data: IBoardAPI) => {
+  const index = await boardsRepo.getIndexById(id);
   if (index >= 0) {
     return boardsRepo.updateOne(id, index, data);
   }
@@ -47,7 +46,15 @@ export const updateOne = (id: string, data: IBoardAPI) => {
  * @param data {object} type of Board
  * @returns successfully created object of Board
  */
-export const insertOne = (data: IBoardAPI) => boardsRepo.insertOne(data);
+export const insertOne = async (data: IBoardAPI): Promise<IBoard> => {
+
+  const result = await boardsRepo.insertOne({
+    ...data,
+    columns: data.columns || [],
+  });
+
+  return result;
+}
 
 export const boardsService = {
   deleteById,

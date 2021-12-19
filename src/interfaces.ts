@@ -4,10 +4,19 @@ export interface IColumn {
   id: string;
 }
 
-export interface IUser {
+export interface IUserAPI {
   name: string;
   login: string;
   password: string;
+}
+
+export interface IUser extends IUserAPI {
+  id: string;
+}
+
+export interface IUserApiResponse {
+  name: string;
+  login: string;
   id: string;
 }
 
