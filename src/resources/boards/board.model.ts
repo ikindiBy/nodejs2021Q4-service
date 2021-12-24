@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { IBoard, IColumn } from '../../interfaces';
+import { IBoard, IBoardAPI, IColumn } from '../../interfaces';
 
 class Board implements IBoard {
   title: string;
@@ -11,10 +11,10 @@ class Board implements IBoard {
   constructor({
     title,
     columns,
-  }) {
+  }: IBoardAPI) {
     this.id = uuid();
     this.title = title;
-    this.columns = columns;
+    this.columns = columns || [];
   }
 }
 

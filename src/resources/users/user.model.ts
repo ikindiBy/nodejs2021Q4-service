@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { IUser } from '../../interfaces';
+import { IUser, IUserAPI } from '../../interfaces';
 
 class User implements IUser {
   name: string;
@@ -14,7 +14,7 @@ class User implements IUser {
     name,
     login,
     password,
-  }) {
+  }: IUserAPI) {
     this.id = uuid();
     this.name = name;
     this.login = login;

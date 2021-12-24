@@ -1,9 +1,12 @@
-// import { FastifyInstance } from 'fastify';
+import { FastifyInstance } from 'fastify';
 import { usersService } from './user.service';
+import { IUserAPI, IFastifyParams, IFastifyBody } from '../../interfaces';
 
+interface IParams {
+  userId: string;
+}
 
-//  const userRoutes = async (fastify: FastifyInstance) => {
-const userRoutes = async (fastify) => {
+const userRoutes = async (fastify: FastifyInstance) => {
   fastify.get('/users', async () => {
     const users = await usersService.getAll();
     if (!users) {
@@ -12,7 +15,7 @@ const userRoutes = async (fastify) => {
     return users;
   });
 
-  fastify.get('/users/:userId', async (request, reply) => {
+  fastify.get<IFastifyParams<IParams>>('/users/:userId', async (request, reply) => {
     const userId = request?.params?.userId;
     if (userId) {
       const user = await usersService.getById(userId);
@@ -23,13 +26,7 @@ const userRoutes = async (fastify) => {
     return null;
   });
 
-  const deleteSchema = {
-    params: {
-      userId: { type: 'string' },
-    },
-  };
-
-  fastify.delete('/users/:userId', deleteSchema, async (request, reply) => {
+  fastify.delete<IFastifyParams<IParams>>('/users/:userId', async (request, reply) => {
     const userId = request?.params?.userId;
     const result = await usersService.deleteById(userId);
     if (result) {
@@ -53,12 +50,12 @@ const userRoutes = async (fastify) => {
     body: userBodyJsonSchema,
   };
 
-  fastify.post('/users', { schema }, async (request, reply) => {
+  fastify.post<IFastifyBody<IUserAPI>>('/users', { schema }, async (request, reply) => {
     const result = await usersService.insertOne(request.body);
     return reply.status(201).send(result);
   });
 
-  fastify.put('/users/:userId', { schema }, async (request, reply) => {
+  fastify.put<IFastifyParams<IParams> & IFastifyBody<IUserAPI>>('/users/:userId', { schema }, async (request, reply) => {
     const userId = request?.params?.userId;
     const result = await usersService.updateOne(userId, request.body);
     return reply.status(200).send(result);

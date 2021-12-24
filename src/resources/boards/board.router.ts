@@ -1,6 +1,13 @@
+ 
+import { FastifyInstance  } from 'fastify';
 import { boardsService } from './board.service';
+import { IBoardAPI, IFastifyParams, IFastifyBody } from '../../interfaces';
 
-const boardRoutes = async (fastify) => {
+interface IParams {
+  boardId: string;
+}
+
+const boardRoutes = async (fastify: FastifyInstance ) => {
   fastify.get('/boards', async () => {
     const boards = await boardsService.getAll();
     if (!boards) {
@@ -9,24 +16,19 @@ const boardRoutes = async (fastify) => {
     return boards;
   });
 
-  fastify.get('/boards/:boardId', async (request, reply) => {
+  fastify.get<IFastifyParams<IParams>>('/boards/:boardId', async (request, reply) => {
     const boardId = request?.params?.boardId;
     if (boardId) {
       const board = await boardsService.getById(boardId);
-
-      return reply.status(200).send(board);
+      if (board) {
+        return reply.status(200).send(board);
+      }
     }
   
     return reply.status(404).send(new Error("Board doesn't exist"));
   });
 
-  const deleteSchema = {
-    params: {
-      userId: { type: 'string' },
-    },
-  };
-
-  fastify.delete('/boards/:boardId', deleteSchema, async (request, reply) => {
+  fastify.delete<IFastifyParams<IParams>>('/boards/:boardId', async (request, reply) => {
     const boardId = request?.params?.boardId;
     const result = await boardsService.deleteById(boardId);
     if (result) {
@@ -48,12 +50,12 @@ const boardRoutes = async (fastify) => {
     body: boardBodyJsonSchema,
   };
 
-  fastify.post('/boards', { schema }, async (request, reply) => {
+  fastify.post<IFastifyBody<IBoardAPI>>('/boards', { schema }, async (request, reply) => {
     const result = await boardsService.insertOne(request.body);
     return reply.status(201).send(result);
   });
 
-  fastify.put('/boards/:boardId', { schema }, async (request, reply) => {
+  fastify.put<IFastifyBody<IBoardAPI> & IFastifyParams<IParams>>('/boards/:boardId', { schema }, async (request, reply) => {
     const boardId = request?.params?.boardId;
     const result = await boardsService.updateOne(boardId, request.body);
     return reply.status(200).send(result);

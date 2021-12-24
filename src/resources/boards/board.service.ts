@@ -1,4 +1,5 @@
 import { boardsRepo } from './board.memory.repository';
+import { tasksService } from '../tasks/task.service';
 import { IBoardAPI, IBoard } from '../../interfaces';
 
 /**
@@ -22,6 +23,7 @@ export const getById = (id: string) => boardsRepo.getById(id);
 export const deleteById = async (id: string) => {
   const index = await boardsRepo.getIndexById(id);
   if (index >= 0) {
+    tasksService.deleteByBoardId(id);
     return boardsRepo.deleteByIndex(index);
   }
   return false;

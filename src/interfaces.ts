@@ -1,6 +1,6 @@
 export interface IColumn {
   title: string;
-  order?: string;
+  order?: number;
   id: string;
 }
 
@@ -34,9 +34,19 @@ export interface IBoardAPI {
 export interface ITask {
   id: string;
   title: string;
-  order: string;
+  order?: number;
   description?: string;
-  userId: string;
+  userId?: string | null;
   boardId: string;
-  columnId: string;
+  columnId?: string;
+}
+
+export type ITaskAPI = Omit<ITask, "id">;
+
+export interface IFastifyParams<T> {
+  Params: T,
+}
+
+export interface IFastifyBody<T> {
+  Body: T,
 }
