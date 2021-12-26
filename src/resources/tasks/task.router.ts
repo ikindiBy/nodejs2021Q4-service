@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { tasksService } from './task.service';
 import { ITaskAPI, IFastifyParams, IFastifyBody } from '../../interfaces';
+import NotFoundError from '../../errorHandler/NotFoundError';
 
 interface IParams {
   boardId: string;
@@ -14,7 +15,7 @@ const taskRoutes = async (fastify: FastifyInstance) => {
     const boardId = request?.params?.boardId;
     const tasks = await tasksService.getAllByBoardId(boardId);
     if (!tasks) {
-      throw new Error('No tasks found')
+      throw new NotFoundError("Tasks don't found");
     }
     return tasks;
   });
@@ -30,7 +31,7 @@ const taskRoutes = async (fastify: FastifyInstance) => {
       }
     }
   
-    return reply.status(404).send(new Error("Task doesn't exist"));
+    throw new NotFoundError("Task doesn't exist");
   });
 
 
@@ -42,7 +43,7 @@ const taskRoutes = async (fastify: FastifyInstance) => {
       return reply.status(200).send('Task deleted');
     }
     
-    return reply.status(404).send(new Error("Task doesn't exist"));
+    throw new NotFoundError("Task doesn't exist");
   });
 
   const taskBodyJsonSchema = {
