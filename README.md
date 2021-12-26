@@ -1,4 +1,4 @@
-# REST service
+# REST service with using TypeScript
 
 **The application operates with the following resources:**
 
@@ -21,7 +21,7 @@
     title,
     order,
     description,
-    userId, //assignee
+    userId,
     boardId,
     columnId
   }
@@ -52,5 +52,9 @@
 2. To init the service `npm i` command should be used.
 
 3. To run the service `npm start` command should be used.
+
+4. To run the linter `npm run lint` command should be used.
+
+5. To run the tests `npm run test` command should be used.
 
 4. Service listens on PORT `4000`.
