@@ -6,9 +6,20 @@ export const handleErrors = (server: FastifyInstance): void => {
     server.log.error(error);
     if (error instanceof NotFoundError) {
       reply.status(error.statusCode || 404).send(error.message);
-    } else {
-      reply.status(500).send(error.message);
-      process.exit(1);
     }
+  });
+
+  process.on('uncaughtException', () => {
+    server.log.error('uncaughtException');
+    setTimeout(() => {
+      process.exit(1);
+    }, 100);
+  });
+
+  process.on('unhandledRejection', () => {
+    server.log.error('unhandledRejection');
+    setTimeout(() => {
+      process.exit(1);
+    }, 100);
   });
 };
