@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { usersService } from './user.service';
 import { IUserAPI, IFastifyParams, IFastifyBody } from '../../interfaces';
+import NotFoundError from '../../errorHandler/NotFoundError';
 
 interface IParams {
   userId: string;
@@ -33,7 +34,7 @@ const userRoutes = async (fastify: FastifyInstance) => {
       return reply.status(200).send('User deleted');
     }
     
-    return reply.status(404).send(new Error("User doesn't exist"));
+    throw new NotFoundError("User doesn't exist");
   });
 
   const userBodyJsonSchema = {

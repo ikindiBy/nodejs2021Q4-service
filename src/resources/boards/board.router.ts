@@ -2,6 +2,7 @@
 import { FastifyInstance  } from 'fastify';
 import { boardsService } from './board.service';
 import { IBoardAPI, IFastifyParams, IFastifyBody } from '../../interfaces';
+import NotFoundError from '../../errorHandler/NotFoundError';
 
 interface IParams {
   boardId: string;
@@ -11,7 +12,7 @@ const boardRoutes = async (fastify: FastifyInstance ) => {
   fastify.get('/boards', async () => {
     const boards = await boardsService.getAll();
     if (!boards) {
-      throw new Error('No boards found')
+      throw new NotFoundError("Board doesn't exist");
     }
     return boards;
   });
@@ -25,17 +26,17 @@ const boardRoutes = async (fastify: FastifyInstance ) => {
       }
     }
   
-    return reply.status(404).send(new Error("Board doesn't exist"));
+    throw new NotFoundError("Board doesn't exist");
   });
 
   fastify.delete<IFastifyParams<IParams>>('/boards/:boardId', async (request, reply) => {
     const boardId = request?.params?.boardId;
     const result = await boardsService.deleteById(boardId);
-    if (result) {
-      return reply.status(200).send('Board deleted');
+    if (!result) {
+      throw new NotFoundError("Board doesn't exist");
     }
     
-    return reply.status(404).send(new Error("Board doesn't exist"));
+    return reply.status(200).send('Board deleted');
   });
 
   const boardBodyJsonSchema = {
