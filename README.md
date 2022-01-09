@@ -58,3 +58,23 @@
 5. To run the tests `npm run test` command should be used.
 
 4. Service listens on PORT `4000`.
+
+**Work with Docker:**
+
+1. Build a container `docker-compose build`.
+
+2. Run a container `docker-compose up -d` in detached mode.
+
+3. Run tests `docker exec -i -t {id} sh` on launched container.
+
+4. To see all containers `docker ps -a` (f.e. to get ID of contained).
+
+5. To see all images `docker images`.
+
+6. To build image `docker build .`.
+
+7. To stop container `docker-compose stop`.
+
+8. To show logs `docker-compose logs`.
+
+
