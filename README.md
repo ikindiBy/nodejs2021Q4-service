@@ -1,5 +1,9 @@
 # REST service with using TypeScript
 
+After cloning use command
+
+`git checkout task-9`
+
 **The application operates with the following resources:**
 
 - `User` (with attributes):

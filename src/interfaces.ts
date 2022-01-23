@@ -23,7 +23,7 @@ export interface IUserApiResponse {
 export interface IBoard {
   title: string;
   columns: IColumn[];
-  id: string;
+  id: string | number;
 }
 
 export interface IBoardAPI {
